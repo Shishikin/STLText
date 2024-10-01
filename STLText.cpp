@@ -7,10 +7,52 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include <list>
+
+#include <time.h>    // нужен для работы со временем
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+template <typename T>
+void SplitTextIntoSentences(T& sentences, std::string& text)
+{
+    sentences.push_back("");  // заполнить первую строку
+
+    for (auto it = text.begin(); it < text.end(); ++it)
+    {
+        if (*it != '\n')
+        {
+            if (*it == '.' || *it == '?' || *it == '!')
+            {
+                if (sentences.size() > 2)      // если число строк больше 2
+                {
+                    if (sentences.back().size() == 0)  // последняя строка вектора пустая
+                    {
+                        auto it2 = std::next(sentences.begin(), sentences.size() - 2); //достучаться до элемента контейнера с нужным номером
+                        (*it2).push_back(*it); // добавить в предпоследний вектор точку
+                    }
+                    else
+                    {
+                        sentences.back().push_back(*it);   // копи паста шифр 1
+                        sentences.push_back("");           // копи паста шифр 2
+                    }
+                }
+                else
+                {
+                    sentences.back().push_back(*it);   // копи паста шифр 1
+                    sentences.push_back("");           // копи паста шифр 2
+                }
+            }
+            else
+            {
+                sentences.back().push_back(*it); // копи паста шифр 1
+            }
+
+        }
+    }
+}
 
 
 int main()
@@ -35,47 +77,34 @@ int main()
 
      
 
-    std::vector<std::string> proposal; // вектор предложений
-    proposal.push_back("");
-    for (auto it = text.begin(); it < text.end(); ++it)
-    {
-        if (*it != '\n')
-        {
-            if (*it == '.' || *it == '?' || *it == '!')
-            {
-                if (proposal.size() > 2)      // если число строк больше 2
-                {
-                    if (proposal.back().size() == 0)  // последняя строка вектора пустая
-                    {
-                        proposal[proposal.size() - 2].push_back(*it); // добавить в предпоследний вектор точку
-                    }
-                    else
-                    {
-                        proposal.back().push_back(*it);   // копи паста шифр 1
-                        proposal.push_back("");           // копи паста шифр 2
-                    }
-                }
-                else
-                {
-                    proposal.back().push_back(*it);   // копи паста шифр 1
-                    proposal.push_back("");           // копи паста шифр 2
-                }
-            }
-            else
-            {
-                proposal.back().push_back(*it); // копи паста шифр 1
-            }
-            
-        }
-    }
+    std::vector<std::string> sentencesVector; // вектор предложений
+
+    clock_t t1Vector = clock();   // время в данный момент
+    SplitTextIntoSentences(sentencesVector, text);
+    clock_t t2Vector = clock();
+
+    // CLOCKS_PER_SEC - количество единиц таймера clock() в секунду
+    double timeSplitTextIntoSentencesVector = static_cast<double>(t2Vector - t1Vector) / CLOCKS_PER_SEC;
+
+
+    std::list<std::string> sentencesList;     // список предложений
+
+    clock_t t1List = clock();
+    SplitTextIntoSentences(sentencesList, text);
+    clock_t t2List = clock();
+    
+    double timeSplitTextIntoSentencesList = static_cast<double>(t2List - t1List) / CLOCKS_PER_SEC;
+
 
 
     std::ofstream out("testOutput.txt");
-    for (auto& a : proposal)
+    for (auto& a : sentencesVector)
     {
         out << a << '\n';
     }
 
+    std::cout << "Время заполнения вектора " << timeSplitTextIntoSentencesVector << '\n';
+    std::cout <<"Время заполнения списка " << timeSplitTextIntoSentencesList << '\n';
 
     out.close();
 
