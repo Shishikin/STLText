@@ -73,9 +73,7 @@ int main()
     
     std::string text(iterator_begin, iterator_end);    // заполняем строку файлом
     
-    in.close();     // закрываем файла ввода
-
-     
+    in.close();     // закрываем файла ввода     
 
     std::vector<std::string> sentencesVector; // вектор предложений
 
@@ -95,21 +93,58 @@ int main()
     
     double timeSplitTextIntoSentencesList = static_cast<double>(t2List - t1List) / CLOCKS_PER_SEC;
 
-
-
     std::ofstream out("testOutput.txt");
     for (auto& a : sentencesVector)
     {
         out << a << '\n';
     }
+    out.close();
 
     std::cout << "Время заполнения вектора " << timeSplitTextIntoSentencesVector << '\n';
     std::cout <<"Время заполнения списка " << timeSplitTextIntoSentencesList << '\n';
 
-    out.close();
+    std::vector<int> countWordsVector;
+    for (auto& a : sentencesVector)
+    {
+        int countWords = 0;
+        int countSpace = 0;
+        for (auto& b : a)
+        {
+            if (b == ' ')
+            {
+                if (countSpace == 0)
+                {
+                    ++countWords;
+                    ++countSpace;
+                }
+            }
+            else
+            {
+                countSpace = 0;
+            }
+        }
+        if (a[0] == ' ')
+        {
+            countWordsVector.push_back(countWords);
+        }
+        else
+        {
+            countWordsVector.push_back(countWords + 1);
+        }
+        
+    }
 
-    std::cout << "коломна\n";
+    std::ofstream outCountWords("CountWords.txt");
+    for (auto& a : countWordsVector)
+    {
+        outCountWords << a << '\n';
+    }
+    outCountWords.close();
+
+
+
     std::cout << "Hello World!\n";
+    return 0;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
