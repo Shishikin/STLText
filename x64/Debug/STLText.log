@@ -1,2 +1,3 @@
 ﻿  STLText.cpp
+C:\visialStudio\Askon\STL 8\STLText\STLText.cpp(146,18): warning C4244: инициализация: преобразование "__int64" в "int", возможна потеря данных
   STLText.vcxproj -> C:\visialStudio\Askon\STL 8\STLText\x64\Debug\STLText.exe

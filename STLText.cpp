@@ -8,6 +8,7 @@
 #include <iterator>
 #include <vector>
 #include <list>
+#include <numeric>
 
 #include <time.h>    // нужен для работы со временем
 
@@ -103,11 +104,12 @@ int main()
     std::cout << "Время заполнения вектора " << timeSplitTextIntoSentencesVector << '\n';
     std::cout <<"Время заполнения списка " << timeSplitTextIntoSentencesList << '\n';
 
+    //создаём вектор числа слов
     std::vector<int> countWordsVector;
     for (auto& a : sentencesVector)
     {
-        int countWords = 0;
-        int countSpace = 0;
+        int countWords = 0;    // счётчик слов
+        int countSpace = 0;    // счётчик пробелов
         for (auto& b : a)
         {
             if (b == ' ')
@@ -141,6 +143,9 @@ int main()
     }
     outCountWords.close();
 
+    int indexMax = std::distance(countWordsVector.begin(), std::max_element(countWordsVector.begin(), countWordsVector.end()));
+    std::cout << countWordsVector[indexMax] << '\n';
+    std::cout << sentencesVector[indexMax] << '\n';
 
 
     std::cout << "Hello World!\n";
