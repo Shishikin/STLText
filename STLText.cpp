@@ -9,6 +9,7 @@
 #include <vector>
 #include <list>
 #include <numeric>
+#include <map>
 
 #include <time.h>    // нужен для работы со временем
 
@@ -147,6 +148,25 @@ int main()
     std::cout << countWordsVector[indexMax] << '\n';
     std::cout << sentencesVector[indexMax] << '\n';
 
+    std::map<int, int> lengthCount;
+    for (auto& a : countWordsVector)
+    {
+        if (lengthCount.find(a) != lengthCount.end())
+        {
+            ++lengthCount[a];
+        }
+        else
+        {
+            lengthCount[a] = 1;
+        }
+    }
+
+    std::ofstream outLengthCount("lengthCount.txt");
+    for (auto& a : lengthCount)
+    {
+        outLengthCount << a.first << '\t' << a.second << '\n';
+    }
+    outLengthCount.close();
 
     std::cout << "Hello World!\n";
     return 0;
